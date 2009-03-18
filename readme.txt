@@ -1,6 +1,6 @@
 === WordCount ===
 Donate link:
-Contributors: me
+Contributors: Adrian Soluch
 Tags: sidebar,widget,plugin,statistics
 Requires at least: 2.0.2
 Tested up to: 2.7.1

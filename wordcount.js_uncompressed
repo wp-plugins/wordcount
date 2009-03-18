@@ -1,0 +1,225 @@
+/*****************************************************
+ *
+ * 	Plugin Name: wps - WordsPerSecond
+ * 	Plugin URI: http://
+ * 	Description: measure your reading speed
+ * 	Version: 1.0
+ * 	Author: Adrian Soluch
+ * 	Author URI: http://
+ *
+ * 	THX to Peter-Paul Koch for the DragDrop script
+ *
+ *****************************************************/
+
+	var zeitInterval = 0;
+	var letzteZeit = 0;
+	var laengeZuletzt = 0;
+	var alleZeichen = 0; 
+	var allInall = 0;
+
+//    window.document.onmouseup = MouseUpHandler;
+    window.document.onmousedown = MouseUpHandler;
+    window.document.onmousemove = WordCountA;
+
+    function WordCountA() {
+	//  refreshing the actual-words area
+		var texts = '';
+		var laenge = '';
+	
+		laenge = getText();
+
+		if(laenge > 1) {
+			document.getElementById('words').innerHTML = laenge;
+		}else {
+			document.getElementById('words').innerHTML = '';	
+		}
+		laengeZuletzt = laenge;
+	}
+	
+    function MouseUpHandler(){
+		getTime();
+		selectedText();
+    }
+	
+	function getTime() {
+		var jetzt = new Date();
+		var zeitAktuell = jetzt.getTime();
+		if(letzteZeit != '') {
+			zeitInterval = (zeitAktuell - letzteZeit) / 1000;
+			letzteZeit = zeitAktuell;
+		}else {letzteZeit = zeitAktuell;}
+	}
+	
+	function getText() {
+       	if (document.getSelection) {
+        	texts = document.getSelection(); }
+       	else if (window.getSelection) {
+           	texts = windows.getSelection(); }
+       	else if (document.selection) {
+           	texts = document.selection.createRange().text; }
+		else { //alert("nonselector")
+		}
+		var laenge = texts.split(/\ /).length;
+		return laenge;
+	}
+
+	function selectedText() {
+		var txt = '';
+		var laenge = '';
+		var wordsNow = document.getElementById('words');
+		var wordsLast = document.getElementById('words2');
+		var	timeSince = document.getElementById('ttime');
+		var wordsTime = document.getElementById('wpm');
+		var overalldiv = document.getElementById('overall');
+		var wps = '';
+		var zw = '';
+	
+		laenge = getText(); 
+		laengeZuletzt = laenge;
+
+		if(laengeZuletzt > 2) {
+			wordsLast.innerHTML = laengeZuletzt;
+			timeSince.innerHTML = zeitInterval;
+			if(laengeZuletzt != 0 && zeitInterval != 0) {
+				wps = laengeZuletzt / zeitInterval;
+				wordsTime.innerHTML = wps.toFixed(1); 
+			}
+		// get Average
+		allInall++;
+		alleZeichen += wps;
+		zw = alleZeichen / allInall;
+		overalldiv.innerHTML = zw.toFixed(1);
+		}else {
+			wordsNow.innerHTML = '';
+			wordsLast.innerHTML = '';
+			timeSince.innerHTML = '';
+			wordsTime.innerHTML = '';
+		}
+
+	}
+
+/******************************************************************/
+
+	function closeWcsBox() {
+		document.getElementById('wcbox').style.display = 'none';
+	}
+
+/******************************************************************/
+
+function addEventSimple(obj,evt,fn) {
+	if (obj.addEventListener)
+		obj.addEventListener(evt,fn,false);
+	else if (obj.attachEvent)
+		obj.attachEvent('on'+evt,fn);
+}
+function removeEventSimple(obj,evt,fn) {
+	if (obj.removeEventListener)
+		obj.removeEventListener(evt,fn,false);
+	else if (obj.detachEvent)
+		obj.detachEvent('on'+evt,fn);
+}
+/******************************************************************/
+dragDrop = {
+	keyHTML: '<a href="#" class="keyLink">#</a>',
+	keySpeed: 10, // pixels per keypress event
+	initialMouseX: undefined,
+	initialMouseY: undefined,
+	startX: undefined,
+	startY: undefined,
+	dXKeys: undefined,
+	dYKeys: undefined,
+	draggedObject: undefined,
+	initElement: function (element) {
+		if (typeof element == 'string')
+			element = document.getElementById(element);
+		element.onmousedown = dragDrop.startDragMouse;
+		element.innerHTML += dragDrop.keyHTML;
+		var links = element.getElementsByTagName('a');
+		var lastLink = links[links.length-1];
+		lastLink.relatedElement = element;
+		lastLink.onclick = dragDrop.startDragKeys;
+	},
+	startDragMouse: function (e) {
+		dragDrop.startDrag(this);
+		var evt = e || window.event;
+		dragDrop.initialMouseX = evt.clientX;
+		dragDrop.initialMouseY = evt.clientY;
+		addEventSimple(document,'mousemove',dragDrop.dragMouse);
+		addEventSimple(document,'mouseup',dragDrop.releaseElement);
+		return false;
+	},
+	startDragKeys: function () {
+		dragDrop.startDrag(this.relatedElement);
+		dragDrop.dXKeys = dragDrop.dYKeys = 0;
+		addEventSimple(document,'keydown',dragDrop.dragKeys);
+		addEventSimple(document,'keypress',dragDrop.switchKeyEvents);
+		this.blur();
+		return false;
+	},
+	startDrag: function (obj) {
+		if (dragDrop.draggedObject)
+			dragDrop.releaseElement();
+		dragDrop.startX = obj.offsetLeft;
+		dragDrop.startY = obj.offsetTop;
+		dragDrop.draggedObject = obj;
+		obj.className += ' dragged';
+	},
+	dragMouse: function (e) {
+		var evt = e || window.event;
+		var dX = evt.clientX - dragDrop.initialMouseX;
+		var dY = evt.clientY - dragDrop.initialMouseY;
+		dragDrop.setPosition(dX,dY);
+		return false;
+	},
+	dragKeys: function(e) {
+		var evt = e || window.event;
+		var key = evt.keyCode;
+		switch (key) {
+			case 37:	// left
+			case 63234:
+				dragDrop.dXKeys -= dragDrop.keySpeed;
+				break;
+			case 38:	// up
+			case 63232:
+				dragDrop.dYKeys -= dragDrop.keySpeed;
+				break;
+			case 39:	// right
+			case 63235:
+				dragDrop.dXKeys += dragDrop.keySpeed;
+				break;
+			case 40:	// down
+			case 63233:
+				dragDrop.dYKeys += dragDrop.keySpeed;
+				break;
+			case 13: 	// enter
+			case 27: 	// escape
+				dragDrop.releaseElement();
+				return false;
+			default:
+				return true;
+		}
+		dragDrop.setPosition(dragDrop.dXKeys,dragDrop.dYKeys);
+		if (evt.preventDefault)
+			evt.preventDefault();
+		return false;
+	},
+	setPosition: function (dx,dy) {
+		dragDrop.draggedObject.style.left = dragDrop.startX + dx + 'px';
+		dragDrop.draggedObject.style.top = dragDrop.startY + dy + 'px';
+	},
+	switchKeyEvents: function () {
+		// for Opera and Safari 1.3
+		removeEventSimple(document,'keydown',dragDrop.dragKeys);
+		removeEventSimple(document,'keypress',dragDrop.switchKeyEvents);
+		addEventSimple(document,'keypress',dragDrop.dragKeys);
+	},
+	releaseElement: function() {
+		removeEventSimple(document,'mousemove',dragDrop.dragMouse);
+		removeEventSimple(document,'mouseup',dragDrop.releaseElement);
+		removeEventSimple(document,'keypress',dragDrop.dragKeys);
+		removeEventSimple(document,'keypress',dragDrop.switchKeyEvents);
+		removeEventSimple(document,'keydown',dragDrop.dragKeys);
+		dragDrop.draggedObject.className = dragDrop.draggedObject.className.replace(/dragged/,'');
+		dragDrop.draggedObject = null;
+	}
+}

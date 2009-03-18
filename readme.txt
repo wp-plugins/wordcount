@@ -1,10 +1,10 @@
 === WordCount ===
-Contributors:
-Donate link: 
+Donate link:
+Contributors: me
 Tags: sidebar,widget,plugin,statistics
 Requires at least: 2.0.2
 Tested up to: 2.7.1
-Stable tag: 
+Stable tag: trunk
 
 == Description ==
 

@@ -10,16 +10,16 @@ Stable tag: trunk
 
 This plugin enables you to have an overview over the amount of words you're reading on someones blog.
 It's a simple, Drag n' Droppable, easy to install little box with following fields:
-- words (words you actually selected)
-- amount last words
-- time needed (the amount of time needed to read)
-- words per second
-- average words per second
+1. words (words you actually selected)
+2. amount last words
+3. time needed (the amount of time needed to read)
+4. words per second
+5. average words per second
 
 to change it's position at start:
 edit wordcount.css
-top: 50px;
-right:5px;
+-top: 50px;
+-right:5px;
 attributes.
 
 that's it - enjoy!

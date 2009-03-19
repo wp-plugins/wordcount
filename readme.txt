@@ -10,6 +10,7 @@ Stable tag: trunk
 
 This plugin enables you to have an overview over the amount of words you're reading on someones blog.
 It's a simple, Drag n' Droppable, easy to install little box with following fields:
+
 1. words (words you actually selected)
 2. amount last words
 3. time needed (the amount of time needed to read)
@@ -18,9 +19,11 @@ It's a simple, Drag n' Droppable, easy to install little box with following fiel
 
 to change it's position at start:
 edit wordcount.css
+
 -top: 50px;
 -right:5px;
-attributes.
+
+thanks a lot to Peter-Paul Koch for the Drag-Drop script!
 
 that's it - enjoy!
 
